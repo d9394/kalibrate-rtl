@@ -254,6 +254,7 @@ int main(int argc, char **argv) {
 		printf("debug: RX Subdev Spec        :\t%s\n", subdev? "B" : "A");
 		printf("debug: Antenna               :\t%s\n", antenna? "RX2" : "TX/RX");
 		printf("debug: Gain                  :\t%f\n", gain);
+		printf("debug: Version               :v2");
 	}
 
 	u = new usrp_source(decimation, fpga_master_clock_freq);

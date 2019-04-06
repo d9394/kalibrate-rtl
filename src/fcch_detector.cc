@@ -56,6 +56,9 @@ static const char * const fftw_plan_name = ".kal_fftw_plan";
 fcch_detector::fcch_detector(const float sample_rate, const unsigned int D,
    const float p, const float G) {
 
+	if(g_debug) {
+		printf("debug: start fcch_detector \n");
+	}
 	FILE *plan_fp;
 	char plan_name[BUFSIZ];
 	const char *home;
@@ -79,8 +82,14 @@ fcch_detector::fcch_detector(const float sample_rate, const unsigned int D,
 	m_y_cb = new circular_buffer(8192, sizeof(complex), 1);
 	m_e_cb = new circular_buffer(1015808, sizeof(float), 0);
 
+	if(g_debug) {
+		printf("debug: cirular_buffer finish\n");
+	}
 	m_in = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * FFT_SIZE);
 	m_out = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * FFT_SIZE);
+        if(g_debug) {
+                printf("debug: fftw malloc finish\n");
+        }
 	if((!m_in) || (!m_out))
 		throw std::runtime_error("fcch_detector: fftw_malloc failed!");
 #ifndef _WIN32
@@ -101,10 +110,18 @@ fcch_detector::fcch_detector(const float sample_rate, const unsigned int D,
 		}
 	} else
 #endif
-		m_plan = fftw_plan_dft_1d(FFT_SIZE, m_in, m_out, FFTW_FORWARD,
-		   FFTW_ESTIMATE);
+		m_plan = fftw_plan_dft_1d(FFT_SIZE, m_in, m_out, FFTW_FORWARD, FFTW_ESTIMATE);
+/*
+		m_plan = fftw_plan_dft_1d(FFT_SIZE, m_in, m_out, FFTW_FORWARD, FFTW_MEASURE);
+*/
+	if(g_debug) {
+		printf("debug: fftw dft 1d out :\t%s\n",m_out);
+	}
 	if(!m_plan)
 		throw std::runtime_error("fcch_detector: fftw plan failed!");
+	if(g_debug) {
+		printf("debug: fcch_detector finish.\n");
+	}
 }
 
 

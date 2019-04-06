@@ -66,7 +66,7 @@ public:
 
 private:
 #define GSM_RATE (1625000.0 / 6.0)
-#define FFT_SIZE 1024
+#define FFT_SIZE 128 
 
 	unsigned int	m_w_len,
 			m_D,

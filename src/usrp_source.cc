@@ -84,14 +84,18 @@ usrp_source::~usrp_source() {
 
 
 void usrp_source::stop() {
-
+        if(g_debug) {
+                printf("debug: enter stop()            \n");
+        }
 	pthread_mutex_lock(&m_u_mutex);
 	pthread_mutex_unlock(&m_u_mutex);
 }
 
 
 void usrp_source::start() {
-
+	if(g_debug) {
+		printf("debug: enter start()            \n");
+	}
 	pthread_mutex_lock(&m_u_mutex);
 	pthread_mutex_unlock(&m_u_mutex);
 }
@@ -114,7 +118,7 @@ void usrp_source::calculate_decimation() {
 float usrp_source::sample_rate() {
 	if(g_debug) {
 		printf("debug: sample_rate            :\t%u\n", m_sample_rate);
-	}
+	}	
 	return m_sample_rate;
 
 }
@@ -127,9 +131,10 @@ int usrp_source::tune(double freq) {
 	pthread_mutex_lock(&m_u_mutex);
 	if (freq != m_center_freq) {
 		r = rtlsdr_set_center_freq(dev, (uint32_t)freq);
+//		fprintf(stderr, "Tuned to %i Hz.\n", (uint32_t)freq);
 
 		if (r < 0)
-			fprintf(stderr, "Tuning to %u Hz failed!\n", (uint32_t)freq);
+			fprintf(stderr, "Tuning to %lu Hz failed!\n", (uint32_t)freq);
 		else
 			if(g_debug) {
 				printf("debug: trun to frequency     :\t%u\n", freq);
@@ -287,7 +292,9 @@ int usrp_source::read(complex *buf, unsigned int num_samples,
  * Don't hold a lock on this and use the usrp at the same time.
  */
 circular_buffer *usrp_source::get_buffer() {
-
+	if(g_debug) {
+		printf("debug: get_buffer\n");
+	}
 	return m_cb;
 }
 

@@ -52,7 +52,7 @@
 #include "circular_buffer.h"
 //#include <cstdio>
 
-extern int g_debug;
+extern int g_debug ;
 
 #ifndef D_HOST_OSX
 #ifndef _WIN32
@@ -283,9 +283,10 @@ circular_buffer::~circular_buffer() {
 circular_buffer::circular_buffer(const unsigned int buf_len,
    const unsigned int item_size, const unsigned int overwrite) {
 
-	if(g_debug) {
-		printf("debug: start circular buffer lenght  :\t%u\n", buf_len);
-	}
+        if(g_debug) {
+                printf("debug: start circular buffer lenght :\t%u\n", buf_len );
+        }
+
 	int shm_fd;
 	char shm_name[255]; // XXX should be NAME_MAX
 	void *base;

@@ -35,12 +35,15 @@ inline double round(double x) { return floor(x + 0.5); }
 
 static const unsigned int	AVG_COUNT	= 100;
 static const unsigned int	AVG_THRESHOLD	= (AVG_COUNT / 10);
-static const float		OFFSET_MAX	= 100e3;
+static const float		OFFSET_MAX	= 400e3;
 
 extern int g_verbosity;
 extern int g_debug;
 
 int offset_detect(usrp_source *u) {
+	if(g_debug) {
+		printf("debug: Offset detceting \n");
+	}
 
 #define GSM_RATE (1625000.0 / 6.0)
 
@@ -62,11 +65,22 @@ int offset_detect(usrp_source *u) {
 	 */
 	sps = u->sample_rate() / GSM_RATE;
 	s_len = (unsigned int)ceil((12 * 8 * 156.25 + 156.25) * sps);
+        if(g_debug) {
+                printf("debug: s_len          :\t%f\n", s_len);
+        }
 	cb = u->get_buffer();
-
+        if(g_debug) {
+                printf("debug: get buffer end           \n");
+        }
 	u->start();
+        if(g_debug) {
+                printf("debug: enter start_threaded            \n");
+        }
 	u->flush();
 	count = 0;
+	if(g_debug) {
+		printf("debug: Step 2\n");
+	}
 	while(count < AVG_COUNT) {
 
 		// ensure at least s_len contiguous samples are read from usrp
@@ -91,7 +105,9 @@ int offset_detect(usrp_source *u) {
 
 			// sanity check offset
 			if(fabs(offset) < OFFSET_MAX) {
-
+				if(g_debug) {
+					printf("debug: Found offset :\t%u\n", offset);
+				}
 				offsets[count] = offset;
 				count += 1;
 
@@ -100,6 +116,9 @@ int offset_detect(usrp_source *u) {
 				}
 			}
 		} else {
+			if(g_debug) {
+				printf("debug: offset not found  :\t%u\n", offset);
+			}
 			++notfound;
 		}
 
